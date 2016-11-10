@@ -67,7 +67,11 @@ export default class FeedItem extends React.Component {
         }
         return liked;
       }
-        render() {
+
+
+
+      render() {
+        // console.log(this.state);
         var likeButtonText = "Like";
         if (this.didUserLike()) {
           likeButtonText = "Unlike";
@@ -139,13 +143,16 @@ export default class FeedItem extends React.Component {
                         // i is comment's index in comments array
                         return (
                           <Comment key={i}
+                          commentIdx={i}
+                          data={comment}
+                          feedItemID={data._id}
                           author={comment.author}
                           postDate={comment.postDate}>
                           {comment.contents}
                           </Comment>
                         );
                       })
-}
+                    }
                     </CommentThread>
                 </div>
             </div>

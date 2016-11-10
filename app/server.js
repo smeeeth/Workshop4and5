@@ -104,7 +104,8 @@ export function postComment(feedItemId, author, contents, cb) {
   feedItem.comments.push({
   "author": author,
   "contents": contents,
-  "postDate": new Date().getTime()
+  "postDate": new Date().getTime(),
+  "likeCounter": []
   });
   writeDocument('feedItems', feedItem);
   // Return a resolved version of the feed item so React can
@@ -153,4 +154,27 @@ export function unlikeFeedItem(feedItemId, userId, cb) {
   // Return a resolved version of the likeCounter
   emulateServerReturn(feedItem.likeCounter.map((userId) =>
   readDocument('users', userId)), cb);
+}
+
+
+
+// like and unlike for comments
+export function likeComment(feedId,commentIndex, userId, cb) {
+  var comments = readDocument('feedItems', feedId);
+  var comm = comments.comments[commentIndex];
+  comm.likeCounter.push(userId);
+  writeDocument('feedItems', comments);
+  emulateServerReturn(comm.likeCounter, cb);
+}
+
+
+export function unlikeComment(feedId, commentIndex, userId, cb) {
+  var comments = readDocument('feedItems', feedId);
+  var comm = comments.comments[commentIndex];
+  var userIndex = comm.likeCounter.indexOf(userId);
+  if (userIndex !== -1) {
+    comm.likeCounter.splice(userIndex, 1);
+    writeDocument('feedItems', comments);
+  }
+  emulateServerReturn(comm.likeCounter, cb);
 }
